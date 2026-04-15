@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="worldArtDayApp">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>World Art Day | Celebrating Leonardo da Vinci's Legacy & SDGs</title>
+    <!-- Google Fonts & minimal reset -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #fefaf5;
+            color: #1e2a2f;
+            line-height: 1.5;
+            scroll-behavior: smooth;
+        }
+
+        /* artistic warm palette */
+        :root {
+            --gold: #c9a03d;
+            --deep-terracotta: #b65f3a;
+            --olive-green: #4a6b4a;
+            --ivory: #fff9ef;
+            --charcoal: #2c3e2f;
+        }
+
+        /* main layout */
+        .app-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* navigation */
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 2.5rem;
+            padding: 1.5rem 0;
+            border-bottom: 2px solid rgba(201, 160, 61, 0.3);
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            letter-spacing: 0.5px;
+            color: var(--charcoal);
+            transition: 0.2s;
+            padding: 0.25rem 0;
+            border-bottom: 2px solid transparent;
+        }
+
+        .nav-links a.active {
+            border-bottom-color: var(--gold);
+            color: var(--deep-terracotta);
+        }
+
+        .nav-links a:hover {
+            color: var(--gold);
+        }
+
+        /* page transitions / view container */
+        .view-container {
+            min-height: 70vh;
+            padding: 2rem 0 3rem;
+        }
+
+        /* hero / da vinci section */
+        .hero-davinci {
+            background: linear-gradient(105deg, #f5ede1 0%, #fff5ea 100%);
+            border-radius: 2rem;
+            padding: 2rem 2.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.02);
+            border: 1px solid rgba(201,160,61,0.2);
+        }
+
+        .hero-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 3.2rem;
+            font-weight: 700;
+            color: var(--deep-terracotta);
+            margin-bottom: 0.75rem;
+        }
+
+        .hero-sub {
+            font-size: 1.2rem;
+            color: #5e5a4c;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid var(--gold);
+            padding-left: 1rem;
+        }
+
+        .quote-block {
+            font-style: italic;
+            background: rgba(201,160,61,0.1);
+            padding: 1.2rem;
+            border-radius: 1.2rem;
+            margin: 1rem 0;
+            font-size: 1rem;
+        }
+
+        .grid-2cols {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        .grid-2cols > div {
+            flex: 1 1 280px;
+        }
+
+        .symbol-card, .sdg-card {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            transition: transform 0.2s;
+            border: 1px solid #ede0d0;
+        }
+        .symbol-card:hover, .sdg-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--gold);
+        }
+        .symbol-card h3, .sdg-card h3 {
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: var(--deep-terracotta);
+            margin-bottom: 0.75rem;
+        }
+        .sdg-badge {
+            background: #e8f0e8;
+            color: var(--olive-green);
+            display: inline-block;
+            padding: 0.2rem 0.8rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .btn-leonardo {
+            display: inline-block;
+            background: var(--gold);
+            color: #2c3e2f;
+            padding: 0.6rem 1.4rem;
+            border-radius: 40px;
+            font-weight: 600;
+            text-decoration: none;
+            margin-top: 1rem;
+            transition: 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-leonardo:hover {
+            background: #b58a2e;
+            color: white;
+        }
+
+        footer {
+            text-align: center;
+            border-top: 1px solid #e2d9ce;
+            padding: 2rem 0 1.5rem;
+            margin-top: 2rem;
+            font-size: 0.85rem;
+            color: #6c6a5c;
+        }
+
+        @media (max-width: 680px) {
+            .app-container {
+                padding: 0 1rem;
+            }
+            .hero-title {
+                font-size: 2.2rem;
+            }
+            .nav-links {
+                gap: 1.2rem;
+            }
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-route.min.js"></script>
+    <script>
+        // AngularJS Module & Configuration
+        var app = angular.module('worldArtDayApp', ['ngRoute']);
+
+        // route config: single page application with 3 main views
+        app.config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
+            // using hashbang for simplicity (SPA)
+            $routeProvider
+                .when('/', {
+                    templateUrl: 'home.html',
+                    controller: 'HomeController'
+                })
+                .when('/legacy', {
+                    templateUrl: 'legacy.html',
+                    controller: 'LegacyController'
+                })
+                .when('/sdgs', {
+                    templateUrl: 'sdgs.html',
+                    controller: 'SdgsController'
+                })
+                .otherwise({
+                    redirectTo: '/'
+                });
+            $locationProvider.html5Mode(false);
+        }]);
+
+        // HomeController: emphasize date, da vinci symbolism and peace
+        app.controller('HomeController', ['$scope', function($scope) {
+            $scope.pageTitle = "World Art Day — April 15";
+            $scope.leonardoBirth = "April 15, 1452";
+            $scope.symbolism = [
+                "World Peace",
+                "Freedom of Expression",
+                "Tolerance",
+                "Brotherhood",
+                "Multiculturalism",
+                "Art’s importance to other fields"
+            ];
+            $scope.daVinciQuote = "“Learning never exhausts the mind.” — Leonardo da Vinci";
+            $scope.celebrateYear = new Date().getFullYear();
+        }]);
+
+        // LegacyController: focus on the official declaration and why da Vinci
+        app.controller('LegacyController', ['$scope', function($scope) {
+            $scope.legacyText = "The International Association of Art (IAA) proclaimed April 15 as World Art Day in 2012, honoring the universal genius Leonardo da Vinci. His multidisciplinary spirit — bridging art, science, engineering, and humanism — embodies the values of global solidarity, intercultural dialogue, and creative resilience.";
+            $scope.daVinciValues = [
+                { icon: "🕊️", name: "Symbol of world peace", desc: "Leonardo’s vision transcended conflicts, inspiring harmony across civilizations." },
+                { icon: "🗣️", name: "Freedom of expression", desc: "Art knows no borders; Da Vinci's work champions creative liberty without censorship." },
+                { icon: "🤝", name: "Tolerance & brotherhood", desc: "His legacy encourages mutual respect regardless of faith, origin or identity." },
+                { icon: "🌍", name: "Multiculturalism", desc: "Da Vinci absorbed influences from diverse cultures, reflecting art's universal language." },
+                { icon: "⚙️🎨", name: "Art & other fields", desc: "From anatomy to flight, Da Vinci showed art fuels innovation in science, tech and society." }
+            ];
+        }]);
+
+        // SDGs controller: explicit alignment with Sustainable Development Goals
+        app.controller('SdgsController', ['$scope', function($scope) {
+            $scope.sdgList = [
+                { number: "SDG 4", title: "Quality Education", description: "Arts education fosters creativity, critical thinking and inclusive learning — key to sustainable development.", color: "#C7212F" },
+                { number: "SDG 5", title: "Gender Equality", description: "World Art Day celebrates women artists and promotes equal participation in cultural life worldwide.", color: "#EF402B" },
+                { number: "SDG 10", title: "Reduced Inequalities", description: "Art amplifies marginalized voices, reduces cultural gaps and encourages multicultural understanding.", color: "#DD1367" },
+                { number: "SDG 11", title: "Sustainable Cities & Communities", description: "Public art and cultural heritage strengthen community identity, urban resilience and social cohesion.", color: "#F99D26" },
+                { number: "SDG 16", title: "Peace, Justice & Strong Institutions", description: "As a symbol of peace and freedom of expression, art supports just and inclusive societies.", color: "#00689D" },
+                { number: "SDG 17", title: "Partnerships for the Goals", description: "Collaborative art projects, global exchanges and cross-sector alliances drive the 2030 Agenda.", color: "#19486A" }
+            ];
+            $scope.artSdgMessage = "World Art Day, rooted in Leonardo da Vinci’s ideals, directly supports SDG 16 (peace & justice), SDG 4 (quality education), and SDG 11 (cultural heritage). Art is a powerful catalyst for sustainable transformation.";
+        }]);
+    </script>
+</head>
+<body ng-app="worldArtDayApp">
+    <div class="app-container">
+        <!-- header & navigation -->
+        <header style="padding-top: 1rem;">
+            <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap;">
+                <h1 style="font-family: 'Cormorant Garamond', serif; font-weight: 600; color: #9b5e3c;">🎨 World Art Day</h1>
+                <span style="font-size: 0.9rem; background: #ede0cf; padding: 0.3rem 1rem; border-radius: 30px;">April 15 — Birthday of Leonardo da Vinci</span>
+            </div>
+            <div class="nav-links">
+                <a href="#!/" ng-class="{active: $route.current && $route.current.loadedTemplateUrl === 'home.html'}">🏛️ Home / Essence</a>
+                <a href="#!/legacy" ng-class="{active: $route.current && $route.current.loadedTemplateUrl === 'legacy.html'}">🖌️ Da Vinci's Legacy</a>
+                <a href="#!/sdgs" ng-class="{active: $route.current && $route.current.loadedTemplateUrl === 'sdgs.html'}">🌱 Art & SDGs</a>
+            </div>
+        </header>
+
+        <!-- dynamic view: angular-route injects templates here -->
+        <div class="view-container" ng-view></div>
+
+        <footer>
+            <p>✧ World Art Day — proclaimed by the International Association of Art (IAA) • First celebration 2012 ✧</p>
+            <p style="margin-top: 0.5rem;">In honor of Leonardo da Vinci: symbol of peace, freedom of expression, tolerance, brotherhood, multiculturalism & the unity of arts and sciences.<br> 
+            Aligned with United Nations Sustainable Development Goals (SDGs) — fostering creativity, equality, and global citizenship.</p>
+            <p>📖 Reference: <a href="https://en.wikipedia.org/wiki/World_Art_Day" target="_blank" style="color: #9b5e3c;">Wikipedia: World Art Day</a></p>
+        </footer>
+    </div>
+
+    <!-- ********** HTML Templates (inline for single file) ********** -->
+    <script type="text/ng-template" id="home.html">
+        <div ng-controller="HomeController">
+            <div class="hero-davinci">
+                <div class="hero-title">🎉 April 15 — World Art Day</div>
+                <div class="hero-sub">“The date chosen to honor Leonardo da Vinci’s birthday (1452–1519): a universal genius, pioneer of peace, creativity and humanism.”</div>
+                <div class="quote-block">
+                    <span style="font-weight:600;">🗓️ Why April 15?</span> The International Association of Art established this day to commemorate Leonardo da Vinci — selected as a timeless symbol of <strong>world peace, freedom of expression, tolerance, brotherhood, multiculturalism</strong> and the profound link between art and other fields of knowledge.
+                </div>
+                <div class="grid-2cols">
+                    <div class="symbol-card">
+                        <h3>🕊️ Da Vinci’s Symbolism</h3>
+                        <ul style="margin-left: 1.2rem; margin-top: 0.5rem;">
+                            <li ng-repeat="value in symbolism" style="margin-bottom: 0.5rem;">✨ {{value}}</li>
+                        </ul>
+                        <a href="#!/legacy" class="btn-leonardo">Explore Legacy →</a>
+                    </div>
+                    <div class="symbol-card">
+                        <h3>🎭 Art for All</h3>
+                        <p>World Art Day celebrates creative activity worldwide — from museums to street art, from digital galleries to community murals. It’s a reminder that art breaks barriers, builds empathy, and fuels sustainable development.</p>
+                        <p style="margin-top: 0.8rem; font-weight: 500;">🌈 “Da Vinci was chosen as a symbol of world peace, freedom of expression, tolerance, brotherhood and multiculturalism as well as art’s importance to other fields.” — IAA resolution</p>
+                    </div>
+                </div>
+                <div style="background: #fff2e4; border-radius: 1rem; padding: 1rem; margin-top: 0.5rem;">
+                    🌟 <strong>First celebration:</strong> April 15, 2012 — supported by national committees in France, Sweden, South Africa, Cyprus, Venezuela and many others. Today, it's a global movement bridging cultures.
+                </div>
+            </div>
+            <div style="display: flex; justify-content: center; gap: 1rem; margin: 1rem 0;">
+                <span style="background: #dccfbd; padding: 0.4rem 1rem; border-radius: 50px;">🖼️ 150+ artists inaugural event</span>
+                <span style="background: #dccfbd; padding: 0.4rem 1rem; border-radius: 50px;">🌍 UNESCO spirit of dialogue</span>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/ng-template" id="legacy.html">
+        <div ng-controller="LegacyController">
+            <div class="hero-davinci" style="background: #fef3e8;">
+                <div class="hero-title">📜 Leonardo da Vinci: Eternal Symbol</div>
+                <div class="hero-sub">Why did the IAA choose da Vinci for World Art Day? Because his life embodies peace, tolerance, and the fusion of art with science, engineering, and humanity.</div>
+                <p style="font-size: 1.05rem; margin-bottom: 1.5rem;">{{legacyText}}</p>
+                <div class="grid-2cols">
+                    <div ng-repeat="val in daVinciValues" class="symbol-card">
+                        <h3>{{val.icon}} {{val.name}}</h3>
+                        <p>{{val.desc}}</p>
+                    </div>
+                </div>
+                <div class="quote-block" style="background: #f5e6d6;">
+                    <strong>✒️ Official recognition:</strong> “The date was decided in honor of the birthday of Leonardo da Vinci. Da Vinci was chosen as a symbol of world peace, freedom of expression, tolerance, brotherhood and multiculturalism as well as art’s importance to other fields.” (IAA General Assembly, Guadalajara)
+                </div>
+                <div style="margin-top: 1.8rem; display: flex; flex-wrap: wrap; gap: 1rem; justify-content: space-between;">
+                    <div><span style="font-weight: 700;">🎨 Art & Science</span><br>Da Vinci’s anatomical sketches, engineering designs and masterpieces like Mona Lisa & The Last Supper exemplify cross-disciplinary genius.</div>
+                    <div><span style="font-weight: 700;">🕊️ Global Celebrations</span><br>From Caracas outdoor exhibitions to Florentine cooking demos, World Art Day unites communities in da Vinci's spirit.</div>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/ng-template" id="sdgs.html">
+        <div ng-controller="SdgsController">
+            <div class="hero-davinci" style="background: #eff3ea;">
+                <div class="hero-title">🌍 Art & The Sustainable Development Goals</div>
+                <div class="hero-sub">World Art Day directly advances the 2030 Agenda — because creativity, inclusion, and cultural expression are fundamental to sustainable progress.</div>
+                <p style="margin-bottom: 1rem; font-weight: 500;">{{artSdgMessage}}</p>
+                <div class="grid-2cols">
+                    <div ng-repeat="sdg in sdgList" class="sdg-card">
+                        <span class="sdg-badge" style="background: {{sdg.color}}20; color: {{sdg.color}};">{{sdg.number}}</span>
+                        <h3>{{sdg.title}}</h3>
+                        <p>{{sdg.description}}</p>
+                    </div>
+                </div>
+                <div style="background: #faf0e1; border-radius: 1.5rem; padding: 1.2rem; margin-top: 1rem;">
+                    <span style="font-size: 1.5rem;">🎯</span> <strong>Concrete Alignment:</strong> Leonardo da Vinci’s values — peace, freedom of expression, tolerance, brotherhood, multiculturalism — are the beating heart of SDG 16 (Peace, Justice & Strong Institutions) and SDG 4.7 (Education for sustainable development and global citizenship). Art drives SDG 11 (Cultural heritage & inclusive communities) and reduces inequalities (SDG 10).  
+                    <br><br>📢 On World Art Day, individuals, institutions, and governments are encouraged to support creative economies, artistic freedom, and intercultural exchanges — pillars for a sustainable future.
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 1rem;">
+                <a href="https://www.un.org/sustainabledevelopment/" target="_blank" class="btn-leonardo" style="background: #4a6b4a; color:white;">Learn more about SDGs →</a>
+                <a href="#!/legacy" class="btn-leonardo" style="background: #c9a03d; margin-left: 0.5rem;">Discover Da Vinci's legacy</a>
+            </div>
+        </div>
+    </script>
+</body>
+</html>
